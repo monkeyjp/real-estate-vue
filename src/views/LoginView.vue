@@ -19,6 +19,12 @@ const submit = handleSubmit((values) => {
     <v-card-title class="text-h4 font-weight-bold" tag="h3">
       Login
     </v-card-title>
+    <v-alert
+      v-if="auth.hasError"
+      class="mt-5"
+      type="error"
+      :title="auth.errorMsg"
+    ></v-alert>
     <v-form class="mt-5">
       <v-text-field
         type="email"
