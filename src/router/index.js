@@ -64,7 +64,9 @@ router.beforeEach(async (to, from, next) => {
 function authenticateUser(params) {
   const auth = useFirebaseAuth()
   return new Promise((resolve, reject) => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+
+      unsubscribe()
       if (user) {
         resolve()
       } else {
