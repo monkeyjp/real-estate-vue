@@ -1,8 +1,18 @@
 <script setup>
 import { useForm, useField } from "vee-validate";
-import { validationSchema, imageSchema } from "@/validation/PropertySchema";
+import { validationSchema, imageSchema } from "@/validation/propertySchema";
+import { collection, addDoc } from "firebase/firestore";
+import { useFirestore } from "vuefire";
+import { useRouter } from "vue-router";
+import useImage from "@/composables/useImage";
 
 const items = [1, 2, 3, 4, 5];
+
+const { uploadImage, image, url } = useImage();
+
+const router = useRouter();
+
+const db = useFirestore();
 
 const { handleSubmit } = useForm({
   validationSchema: {
@@ -18,11 +28,20 @@ const rooms = useField("rooms");
 const wc = useField("wc");
 const parking = useField("parking");
 const description = useField("description");
+const pool = useField("pool", null, {
+  initialValue: false,
+});
 
-const submit = handleSubmit((values) => {
-  console.log("pupu");
+const submit = handleSubmit(async (values) => {
+  const { photo, ...property } = values;
 
-  console.log(values);
+  const docRef = await addDoc(collection(db, "properties"), {
+    ...property,
+    photo: url.value,
+  });
+  if (docRef.id) {
+    router.push({ name: "admin-properties" });
+  }
 });
 </script>
 
@@ -48,7 +67,12 @@ const submit = handleSubmit((values) => {
         class="mb-5"
         v-model="photo.value.value"
         :error-messages="photo.errorMessage.value"
+        @change="uploadImage"
       />
+      <div v-if="image" class="my-5">
+        <p class="font-weight-bold">Property Photo:</p>
+        <img :src="image" alt="property photo" class="w-50" />
+      </div>
       <v-text-field
         class="mb-5"
         label="Price"
@@ -90,7 +114,11 @@ const submit = handleSubmit((values) => {
         v-model="description.value.value"
         :error-messages="description.errorMessage.value"
       ></v-textarea>
-      <v-checkbox label="Pool" />
+      <v-checkbox
+        label="Pool"
+        v-model="pool.value.value"
+        :error-messages="pool.errorMessage.value"
+      />
       <v-btn color="pink-accent-3" block @click="submit">Add Property</v-btn>
     </v-form>
   </v-card>
