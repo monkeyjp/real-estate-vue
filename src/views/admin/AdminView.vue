@@ -1,9 +1,7 @@
 <script setup>
 import useProperties from "@/composables/useProperties";
 
-const { propertiesCollection } = useProperties();
-
-console.log(propertiesCollection);
+const { propertiesCollection, propertyPrice } = useProperties();
 </script>
 
 <template>
@@ -12,4 +10,21 @@ console.log(propertiesCollection);
   <v-btn color="blue" variant="flat" :to="{ name: 'new-property' }">
     New Property
   </v-btn>
+  <v-card class="mx-auto mt-10">
+    <v-list-item v-for="property in propertiesCollection" :key="property.id">
+      <template v-slot:prepend>
+        <v-list-item-media :start="true">
+          <img :src="property.photo" alt="" width="180" />
+        </v-list-item-media>
+      </template>
+      <v-list-item-title>{{ property.title }}</v-list-item-title>
+      <v-list-item-subtitle>{{
+        propertyPrice(property.price)
+      }}</v-list-item-subtitle>
+      <template v-slot:append>
+        <v-btn color="info" flat class="mr-2"> Edit </v-btn>
+        <v-btn color="red-darken-3" flat> Delete </v-btn>
+      </template>
+    </v-list-item>
+  </v-card>
 </template>
