@@ -5,10 +5,14 @@ import { collection, addDoc } from "firebase/firestore";
 import { useFirestore } from "vuefire";
 import { useRouter } from "vue-router";
 import useImage from "@/composables/useImage";
+import useLocationMap from "@/composables/useLocationMap";
+import "leaflet/dist/leaflet.css";
+import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 
 const items = [1, 2, 3, 4, 5];
 
 const { uploadImage, image, url } = useImage();
+const { zoom, center, pin } = useLocationMap();
 
 const router = useRouter();
 
@@ -38,6 +42,7 @@ const submit = handleSubmit(async (values) => {
   const docRef = await addDoc(collection(db, "properties"), {
     ...property,
     photo: url.value,
+    location: center.value,
   });
   if (docRef.id) {
     router.push({ name: "admin-properties" });
@@ -119,6 +124,22 @@ const submit = handleSubmit(async (values) => {
         v-model="pool.value.value"
         :error-messages="pool.errorMessage.value"
       />
+      <h2 class="font-weight-bold text-center my-5">Location</h2>
+      <div class="pb-10">
+        <div style="height: 600px">
+          <LMap
+            v-model:zoom="zoom"
+            :center="center"
+            :use-global-leaflet="false"
+          >
+            <LMarker :lat-lng="center" draggable @moveend="pin" />
+            <LTileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            >
+            </LTileLayer>
+          </LMap>
+        </div>
+      </div>
       <v-btn color="pink-accent-3" block @click="submit">Add Property</v-btn>
     </v-form>
   </v-card>

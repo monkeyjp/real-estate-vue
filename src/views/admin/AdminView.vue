@@ -1,4 +1,10 @@
-<script setup></script>
+<script setup>
+import useProperties from "@/composables/useProperties";
+
+const { propertiesCollection } = useProperties();
+
+console.log(propertiesCollection);
+</script>
 
 <template>
   <h2 class="text-center text-h3 my-5 font-weight-bold">Admin Panel</h2>
