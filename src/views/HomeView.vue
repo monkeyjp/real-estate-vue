@@ -3,7 +3,7 @@ import useProperties from "@/composables/useProperties";
 import Property from "@/components/Property.vue";
 import { propertyPrice } from "@/helpers";
 
-const { filteredProperties, pool } = useProperties();
+const { filteredItems, pool } = useProperties();
 </script>
 
 <template>
@@ -15,7 +15,7 @@ const { filteredProperties, pool } = useProperties();
     </v-card-title>
     <v-row>
       <Property
-        v-for="property in filteredProperties"
+        v-for="property in filteredItems"
         :key="property.id"
         :property="property"
         :price="propertyPrice"

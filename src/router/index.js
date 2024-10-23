@@ -30,17 +30,17 @@ const router = createRouter({
       },
       children: [
         {
-          path: '/admin/properties',
+          path: 'properties',
           name: 'admin-properties',
           component: () => import('@/views/admin/AdminView.vue')
         },
         {
-          path: '/admin/new',
+          path: 'new',
           name: 'new-property',
           component: () => import('@/views/admin/NewPropertyView.vue')
         },
         {
-          path: '/admin/edit/:id',
+          path: 'edit/:id',
           name: 'edit-property',
           component: () => import('@/views/admin/EditPropertyView.vue')
         },
